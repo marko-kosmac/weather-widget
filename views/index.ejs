@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Weather widget</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+    <body>
+        <div class="widget" style="margin: 10px; width: 300px;">
+            <div class="panel panel-info">
+                <div class="panel-heading">Weather in <b id="name"><%= city %></b></div>
+                <ul class="list-group">
+                    <li class="list-group-item">Temperature: <b id="temp"><%= temp %></b></li>
+                    <li class="list-group-item">Humidity: <b id="humidity"><%= humidity %></b></li>
+                    <li class="list-group-item">Wind: <b id="wind"><%= wind %></b></li>
+                    <li class="list-group-item">
+                        <form class="form-inline" id="search" action="/" method="get">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="city" placeholder="City">
+                            </div>
+                            <button type="submit" class="btn btn-default">Search</button>
+                        </form>
+                        <div id="error"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
+<script>
+  document.getElementById('city').addEventListener('keyup', function(){
+    document.getElementById("error").innerHTML = '';
+  });
+  document.getElementById('search').addEventListener('submit', function(evt){
+    evt.preventDefault();
+    const city = document.getElementById('city').value;
+    fetch(`/city/${city}`)
+      .then(function(response) {
+        if (response.status === 400) {
+            document.getElementById("error").innerHTML = "Error, the city not found";
+        } else {
+          return response.json();
+        }
+      })
+      .then(function(myJson) {
+        if (myJson !== undefined) {
+          const {city, temp, humidity, wind} = myJson;
+          document.getElementById("name").innerHTML = city;
+          document.getElementById("temp").innerHTML = temp;
+          document.getElementById("humidity").innerHTML = humidity;
+          document.getElementById("wind").innerHTML = wind;
+          document.getElementById("city").value = '';
+          const stateObj = { city: city };
+          history.pushState(stateObj, '', `?city=${city}`);
+        }
+      });
+  })
+</script>
