@@ -5,7 +5,7 @@ module.exports.getWeather = (city) => {
   const url = `http://api.openweathermap.org/data/2.5/weather?q=${city},dk&units=metric&appid=${apiKey}`;
   const weatherResponse = {
     city: city,
-    temperature: null,
+    temp: null,
     humidity: null,
     wind: null,
     error: null
@@ -16,7 +16,7 @@ module.exports.getWeather = (city) => {
         reject(err);
       } else {
         const weather = JSON.parse(body);
-        if (weather.main === undefined) {
+        if (!weather.main) {
           weatherResponse.error = 'Error, please try again';
         } else {
           const windDirection = getWindDirection(weather.wind.deg);
@@ -31,6 +31,6 @@ module.exports.getWeather = (city) => {
 };
 
 function getWindDirection(angle) {
-  var directions = ['nord', 'nordvest', 'vest', 'sydvest', 'syd', 'sydøst', 'øst', 'nordøst'];
+  const directions = ['nord', 'nordvest', 'vest', 'sydvest', 'syd', 'sydøst', 'øst', 'nordøst'];
   return directions[Math.round(((angle %= 360) < 0 ? angle + 360 : angle) / 45) % 8];
 }
