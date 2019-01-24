@@ -11,17 +11,17 @@ app.get('/', function (req, res) {
   const fetchWeatherData = getWeather.getWeather(city);
   fetchWeatherData.then(function (result) {
     res.render('index', result);
-  })
-})
+  });
+});
 
 app.get('/city/:city',  function (req, res) {
   const city = req.params.city;
   const fetchWeatherData = getWeather.getWeather(city);
   fetchWeatherData.then(function (result) {
     res.status(result.error !== null ? 400 : 200).json(result);
-  })
+  });
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-})
+  console.log('Listening on port 3000!'); // eslint-disable-line no-console
+});

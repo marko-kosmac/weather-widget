@@ -9,7 +9,7 @@ module.exports.getWeather = (city) => {
     humidity: null,
     wind: null,
     error: null
-  }
+  };
   return new Promise(function(resolve, reject) {
     request(url, function (err, response, body) {
       if (err) {
@@ -19,7 +19,7 @@ module.exports.getWeather = (city) => {
         if (weather.main === undefined) {
           weatherResponse.error = 'Error, please try again';
         } else {
-          const windDirection = getDirection(weather.wind.deg);
+          const windDirection = getWindDirection(weather.wind.deg);
           weatherResponse.temp = `${weather.main.temp} ℃`;
           weatherResponse.humidity = weather.main.humidity;
           weatherResponse.wind = `${weather.wind.speed} m/s ${windDirection}`;
@@ -28,9 +28,9 @@ module.exports.getWeather = (city) => {
       }
     });
   });
-}
+};
 
-getDirection = (angle) => {
+function getWindDirection(angle) {
   var directions = ['nord', 'nordvest', 'vest', 'sydvest', 'syd', 'sydøst', 'øst', 'nordøst'];
   return directions[Math.round(((angle %= 360) < 0 ? angle + 360 : angle) / 45) % 8];
 }
